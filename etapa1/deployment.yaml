@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: code-nginx
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: code-nginx
+  template:
+    metadata:
+      labels:
+        app: code-nginx
+    spec:
+      containers:
+      - name: code-nginx
+        image: nginx:1.19.1-alpine
+        ports:
+        - containerPort: 80
+        volumeMounts:
+          - mountPath: /usr/share/nginx/html
+            name: nginx-index
+
+      volumes:
+        - name: nginx-index
+          configMap:
+            name: nginx-index
+            items:
+              - key: nginx.index
+                path: index.html
